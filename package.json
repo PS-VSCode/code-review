@@ -11,13 +11,13 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.sayHello"
+		"onCommand:ps-vscode.review"
 	],
 	"main": "./extension",
 	"contributes": {
 		"commands": [{
-			"command": "extension.sayHello",
-			"title": "Hello World"
+			"command": "ps-vscode.review",
+			"title": "Review Code"
 		}]
 	},
 	"devDependencies": {
