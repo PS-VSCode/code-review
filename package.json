@@ -1,0 +1,26 @@
+{
+	"name": "code-review",
+	"displayName": "code review",
+	"description": "Open diff view for all files changed between branches or a chain of commits.",
+	"version": "0.0.1",
+	"publisher": "PS-VSCode",
+	"engines": {
+		"vscode": "^0.10.1"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.sayHello"
+	],
+	"main": "./extension",
+	"contributes": {
+		"commands": [{
+			"command": "extension.sayHello",
+			"title": "Hello World"
+		}]
+	},
+	"devDependencies": {
+		"vscode": "0.10.x"
+	}
+}
