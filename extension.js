@@ -40,19 +40,43 @@ function activate(context) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	var disposable = vscode.commands.registerCommand('ps-vscode.review', function() {
+	let reviewDisposable = vscode.commands.registerCommand('ps-vscode.review', function() {
 		// The code you place here will be executed every time your command is executed
 
 		chooseBranch()
 			.then(
-				selectedBranch => {
-					vscode.window.showInformationMessage(selectedBranch.name);
+				baseBranch => {
+					chooseBranch()
+						.then(
+							patchBranch => {
+								compareBranches(baseBranch, patchBranch);
+							},
+							() => null
+						);
 				},
 				() => null
 			);
 	});
 
-	context.subscriptions.push(disposable);
+	let currentReviewDisposable = vscode.commands.registerCommand('ps-vscode.reviewCurrent', function() {
+		// The code you place here will be executed every time your command is executed
+		git.currentBranch()
+			.then(
+				currentBranch => {
+					chooseBranch()
+						.then(
+							selectedBranch => {
+								compareBranches(selectedBranch, currentBranch);
+							},
+							() => null
+						);
+				},
+				() => vscode.window.showInformationMessage('Cannot determine current branch')
+			);
+	});
+
+	context.subscriptions.push(reviewDisposable);
+	context.subscriptions.push(currentReviewDisposable);
 }
 exports.activate = activate;
 

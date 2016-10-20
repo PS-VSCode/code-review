@@ -11,14 +11,21 @@
 		"Other"
 	],
 	"activationEvents": [
+		"onCommand:ps-vscode.reviewCurrent",
 		"onCommand:ps-vscode.review"
 	],
 	"main": "./extension",
 	"contributes": {
-		"commands": [{
-			"command": "ps-vscode.review",
-			"title": "Review Code"
-		}]
+		"commands": [
+			{
+				"command": "ps-vscode.review",
+				"title": "Review Code..."
+			},
+			{
+				"command": "ps-vscode.reviewCurrent",
+				"title": "Review Current Code Against..."
+			}
+		]
 	},
 	"devDependencies": {
 		"vscode": "0.10.x"
