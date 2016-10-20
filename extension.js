@@ -60,10 +60,10 @@ const reviewAgainstCurrentBranch = () => {
 };
 
 const reviewBranches = (baseBranch, patchBranch) => {
-	var baseBranchName = baseBranch.hasOwnProperty('sha') ? baseBranch.sha : baseBranch;
-	var patchBranchName = patchBranch.hasOwnProperty('sha') ? patchBranch.sha : patchBranch;
+	var baseBranchLookup = gitLookupForBranch(baseBranch);
+	var patchBranchLookup = gitLookupForBranch(patchBranch);
 
-	let comparisonMessage = 'comparing ' + baseBranchName + ' with ' + patchBranchName;
+	let comparisonMessage = 'comparing ' + baseBranchLookup + ' with ' + patchBranchLookup;
 	vscode.window.showInformationMessage(comparisonMessage);
 };
 
