@@ -1,13 +1,19 @@
 'use strict';
 
 var vscode = require('vscode');
-var myExtension = require('../git');
+var gitModule = require('../git');
 var expect = require('chai')
 	.expect;
 
 describe('#currentBranch', function() {
 	context('when inside of a git repository', () => {
-		it('should return the name of the current git branch');
+		it('should return the name of the current git branch', () => {
+			return gitModule.currentBranch()
+				.then(
+					branch => expect(branch)
+					.to.eql('master')
+				);
+		});
 	});
 
 	context('when not inside of a git repository', () => {
