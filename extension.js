@@ -57,9 +57,10 @@ const reviewAgainstCurrentBranch = () => {
 };
 
 const reviewBranches = (baseBranch, patchBranch) => {
-	console.log(baseBranch);
-	console.log(patchBranch);
-	let comparisonMessage = 'comparing ' + baseBranch.name + ' with ' + patchBranch.name;
+	var baseBranchName = baseBranch.hasOwnProperty('sha') ? baseBranch.sha : baseBranch;
+	var patchBranchName = patchBranch.hasOwnProperty('sha') ? patchBranch.sha : patchBranch;
+
+	let comparisonMessage = 'comparing ' + baseBranchName + ' with ' + patchBranchName;
 	vscode.window.showInformationMessage(comparisonMessage);
 };
 
