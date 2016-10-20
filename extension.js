@@ -33,8 +33,12 @@ function activate(context) {
 	var disposable = vscode.commands.registerCommand('ps-vscode.review', function() {
 		// The code you place here will be executed every time your command is executed
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World!');
+		chooseBranch().then(
+			selectedBranch => {
+				vscode.window.showInformationMessage(selectedBranch.name);
+			},
+			() => null
+		);
 	});
 
 	context.subscriptions.push(disposable);
