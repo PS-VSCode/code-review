@@ -5,18 +5,26 @@
 var vscode = require('vscode');
 var git = require('./git');
 
-const chooseBranch = () => git.branchList()
-		.then(branchList => {
-				var defaultBranch = branchList.length ? branchList[0].name : 'master';
+var QuickPickDiffItem = function(diffItem) {
+	this.name = diffItem.name;
+	this.sha = diffItem.sha;
+	this.msg = diffItem.msg;
 
-				return vscode.window.showQuickPick(
-						branchList.map(item => item.name), {
-							placeHolder: defaultBranch
-						}
-					)
-					.then(selectedBranchName => branchList.find(branch => branch.name === selectedBranchName));
-			},
-			() => null);
+	this.label = diffItem.name;
+	this.description = diffItem.sha + ' (' + diffItem.msg + ')';
+};
+
+const chooseBranch = () => git.branchList()
+	.then(branchList => {
+			var defaultBranch = branchList.length ? branchList[0].name : 'master';
+
+			return vscode.window.showQuickPick(
+					branchList.map(item => new QuickPickDiffItem(item)), {
+						placeHolder: defaultBranch
+					}
+				);
+		},
+		() => null);
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
