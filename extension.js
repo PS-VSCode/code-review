@@ -60,9 +60,8 @@ const reviewAgainstCurrentBranch = () => {
 };
 
 const handleDiffs = (baseFileName, patchTempFileName, conflictFlag) => {
-	console.log(baseFileName);
-	console.log(patchTempFileName);
-	console.log(conflictFlag);
+
+	console.log(baseFileName, patchTempFileName, conflictFlag);
 
 	//vscode.window.showInformationMessage('base: ' + baseFileName + ', patch: ' + patchTempFileName + ', conflicting?: ' + conflictFlag);
 };
