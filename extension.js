@@ -1,7 +1,5 @@
 'use strict';
 
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 const git = require('./git');
 
@@ -33,14 +31,10 @@ const compareBranches = (baseBranch, patchBranch) => {
 	vscode.window.showInformationMessage(comparisonMessage);
 }
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 function activate(context) {
 	git.setGitRepoBase(vscode.workspace.rootPath);
 
 	let reviewDisposable = vscode.commands.registerCommand('ps-vscode.review', function() {
-		// The code you place here will be executed every time your command is executed
-
 		chooseBranch()
 			.then(
 				baseBranch => {
@@ -57,7 +51,6 @@ function activate(context) {
 	});
 
 	let currentReviewDisposable = vscode.commands.registerCommand('ps-vscode.reviewCurrent', function() {
-		// The code you place here will be executed every time your command is executed
 		git.currentBranch()
 			.then(
 				currentBranch => {
@@ -78,6 +71,5 @@ function activate(context) {
 }
 exports.activate = activate;
 
-// this method is called when your extension is deactivated
 function deactivate() {}
 exports.deactivate = deactivate;
