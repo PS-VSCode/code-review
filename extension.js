@@ -24,47 +24,50 @@ const chooseBranch = () => git.branchList()
 		},
 		() => null);
 
-const compareBranches = (baseBranch, patchBranch) => {
+const reviewSeparateBranches = () => {
+	chooseBranch()
+		.then(
+			baseBranch => {
+				chooseBranch()
+					.then(
+						patchBranch => {
+							reviewBranches(baseBranch, patchBranch);
+						},
+						() => null
+					);
+			},
+			() => null
+		);
+};
+
+const reviewAgainstCurrentBranch = () => {
+	git.currentBranch()
+		.then(
+			currentBranch => {
+				chooseBranch()
+					.then(
+						selectedBranch => {
+							reviewBranches(selectedBranch, currentBranch);
+						},
+						() => null
+					);
+			},
+			() => vscode.window.showInformationMessage('Cannot determine current branch')
+		);
+};
+
+const reviewBranches = (baseBranch, patchBranch) => {
 	console.log(baseBranch);
 	console.log(patchBranch);
 	let comparisonMessage = 'comparing ' + baseBranch.name + ' with ' + patchBranch.name;
 	vscode.window.showInformationMessage(comparisonMessage);
-}
+};
 
 function activate(context) {
 	git.setGitRepoBase(vscode.workspace.rootPath);
 
-	let reviewDisposable = vscode.commands.registerCommand('ps-vscode.review', function() {
-		chooseBranch()
-			.then(
-				baseBranch => {
-					chooseBranch()
-						.then(
-							patchBranch => {
-								compareBranches(baseBranch, patchBranch);
-							},
-							() => null
-						);
-				},
-				() => null
-			);
-	});
-
-	let currentReviewDisposable = vscode.commands.registerCommand('ps-vscode.reviewCurrent', function() {
-		git.currentBranch()
-			.then(
-				currentBranch => {
-					chooseBranch()
-						.then(
-							selectedBranch => {
-								compareBranches(selectedBranch, currentBranch);
-							},
-							() => null
-						);
-				},
-				() => vscode.window.showInformationMessage('Cannot determine current branch')
-			);
-	});
+	let reviewDisposable = vscode.commands.registerCommand('ps-vscode.review', reviewSeparateBranches);
+	let currentReviewDisposable = vscode.commands.registerCommand('ps-vscode.reviewCurrent', reviewAgainstCurrentBranch);
 
 	context.subscriptions.push(reviewDisposable);
 	context.subscriptions.push(currentReviewDisposable);
