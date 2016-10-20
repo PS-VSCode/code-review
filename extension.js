@@ -12,6 +12,8 @@ const QuickPickDiffItem = function(diffItem) {
 	this.description = diffItem.sha + ' (' + diffItem.msg + ')';
 };
 
+const gitLookupForBranch = branch => branch.hasOwnProperty('sha') ? branch.sha : branch;
+
 const chooseBranch = () => git.branchList()
 	.then(branchList => {
 			let defaultBranch = branchList.length ? branchList[0].name : 'master';
