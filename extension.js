@@ -26,6 +26,13 @@ const chooseBranch = () => git.branchList()
 		},
 		() => null);
 
+const compareBranches = (baseBranch, patchBranch) => {
+	console.log(baseBranch);
+	console.log(patchBranch);
+	let comparisonMessage = 'comparing ' + baseBranch.name + ' with ' + patchBranch.name;
+	vscode.window.showInformationMessage(comparisonMessage);
+}
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
