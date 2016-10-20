@@ -1,0 +1,6 @@
+{
+	"node": true,
+	"mocha": true,
+	"strict": true,
+	"esversion": 6
+}
