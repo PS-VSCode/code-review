@@ -1,6 +1,27 @@
+'use strict';
+
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
+var git = require('./git')
+
+function chooseBranch() {
+	return git.branchList().then(branchList => {
+			var defaultBranch = branchList.length > 0 ? branchList[0].name : 'master';
+
+			return vscode.window.showQuickPick(
+				branchList.map(item => item.name), {
+					placeHolder: defaultBranch
+				}
+			).then(selectedBranchName => {
+					return branchList.find((branch) => {
+						return branch.name === selectedBranchName;
+					});
+				},
+				() => null);
+		},
+		() => null);
+}
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
