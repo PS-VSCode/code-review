@@ -21,3 +21,11 @@ exports.branchList = () => {
 		sha: "a1b2c3d"
 	}]);
 };
+
+exports.currentBranch = () => {
+	return Promise.resolve({
+		name: "master",
+		msg: "master branch",
+		sha: "pooppooooooopoo"
+	});
+};
