@@ -1,6 +1,22 @@
+'use strict';
+
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
+var git = require('./git');
+
+const chooseBranch = () => git.branchList()
+		.then(branchList => {
+				var defaultBranch = branchList.length ? branchList[0].name : 'master';
+
+				return vscode.window.showQuickPick(
+						branchList.map(item => item.name), {
+							placeHolder: defaultBranch
+						}
+					)
+					.then(selectedBranchName => branchList.find(branch => branch.name === selectedBranchName));
+			},
+			() => null);
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -12,8 +28,13 @@ function activate(context) {
 	var disposable = vscode.commands.registerCommand('ps-vscode.review', function() {
 		// The code you place here will be executed every time your command is executed
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World!');
+		chooseBranch()
+			.then(
+				selectedBranch => {
+					vscode.window.showInformationMessage(selectedBranch.name);
+				},
+				() => null
+			);
 	});
 
 	context.subscriptions.push(disposable);
