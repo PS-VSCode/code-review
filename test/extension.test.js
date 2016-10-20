@@ -9,6 +9,8 @@
 
 // The module 'assert' provides assertion methods from node
 var assert = require('assert');
+var expect = require('chai')
+	.expect;
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
@@ -24,20 +26,12 @@ describe('#gitLookupForBranch(branch)', function() {
 			sha: sha
 		};
 
-		assert.equal(myExtension.gitLookupForBranch(branchObject), sha);
+		expect(myExtension.gitLookupForBranch(branchObject))
+			.to.eql(sha);
 	});
 
 	it('uses the branchObject itself is it does not have a sha key', () => {
-		assert.equal(myExtension.gitLookupForBranch(branchObject), branchObject);
+		expect(myExtension.gitLookupForBranch(branchObject))
+			.to.eql(branchObject);
 	})
-});
-
-// Defines a Mocha test suite to group tests of similar kind together
-suite("Extension Tests", function() {
-
-	// Defines a Mocha unit test
-	test("Something 1", function() {
-		assert.equal(-1, [1, 2, 3].indexOf(5));
-		assert.equal(-1, [1, 2, 3].indexOf(0));
-	});
 });

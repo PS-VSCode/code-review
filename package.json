@@ -16,18 +16,20 @@
 	],
 	"main": "./extension",
 	"contributes": {
-		"commands": [
-			{
-				"command": "ps-vscode.review",
-				"title": "Review Code..."
-			},
-			{
-				"command": "ps-vscode.reviewCurrent",
-				"title": "Review Current Code Against..."
-			}
-		]
+		"commands": [{
+			"command": "ps-vscode.review",
+			"title": "Review Code..."
+		}, {
+			"command": "ps-vscode.reviewCurrent",
+			"title": "Review Current Code Against..."
+		}]
 	},
 	"devDependencies": {
+		"mocha": "^3.1.2",
+		"chai": "^3.5.0",
 		"vscode": "0.10.x"
+	},
+	"scripts": {
+		"test": "node ./node_modules/mocha/bin/mocha"
 	}
 }

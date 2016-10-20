@@ -13,6 +13,7 @@ const QuickPickDiffItem = function(diffItem) {
 };
 
 const gitLookupForBranch = branch => branch.hasOwnProperty('sha') ? branch.sha : branch;
+exports.gitLookupForBranch = gitLookupForBranch;
 
 const chooseBranch = () => git.branchList()
 	.then(branchList => {
