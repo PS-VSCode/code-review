@@ -52,7 +52,7 @@ const reviewAgainstCurrentBranch = () => {
 						() => null
 					);
 			},
-			() => vscode.window.showInformationMessage('Cannot determine current branch')
+			error => vscode.window.showInformationMessage(error)
 		);
 };
 
