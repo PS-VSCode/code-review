@@ -59,12 +59,19 @@ const reviewAgainstCurrentBranch = () => {
 		);
 };
 
+const handleDiffs = (baseFileName, patchTempFileName, conflictFlag) => {
+	console.log(baseFileName);
+	console.log(patchTempFileName);
+	console.log(conflictFlag);
+
+	//vscode.window.showInformationMessage('base: ' + baseFileName + ', patch: ' + patchTempFileName + ', conflicting?: ' + conflictFlag);
+};
+
 const reviewBranches = (baseBranch, patchBranch) => {
 	var baseBranchLookup = gitLookupForBranch(baseBranch);
 	var patchBranchLookup = gitLookupForBranch(patchBranch);
 
-	let comparisonMessage = 'comparing ' + baseBranchLookup + ' with ' + patchBranchLookup;
-	vscode.window.showInformationMessage(comparisonMessage);
+	git.diffState(baseBranchLookup, patchBranchLookup, handleDiffs);
 };
 
 function activate(context) {
