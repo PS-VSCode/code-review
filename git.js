@@ -40,17 +40,7 @@ exports.setGitPath = newPath => gitPath = newPath;
 exports.setGitRepoBase = newBase => gitRepoBase = newBase;
 
 exports.currentBranch = () => {
-	return gitRun(['branch'])
-		.then(resultString => {
-			const matcher = /\s*\*\s+(.+?)/y;
-			let match = matcher.exec(resultString);
-			if (!match) throw "No current branch found";
-			return {
-				name: match[1],
-				sha: match[2],
-				msg: match[3]
-			};
-		});
+	return gitRun(['rev-parse', '--abbrev-ref', 'HEAD']);
 };
 
 const fileStatusList = () => gitRun(['status', '-s', '--porcelain'])
