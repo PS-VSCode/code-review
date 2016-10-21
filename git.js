@@ -13,6 +13,11 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
+exports.CONFILCT = 1;
+exports.MODIFIED = 2;
+exports.NEW = 3;
+exports.DELETED = 4;
+
 let gitPath = 'git';
 let gitRepoBase = null;
 const gitRun = cmdArgs => {
@@ -71,12 +76,23 @@ const tmpFile = (branch, file) => {
 				}));
 		});
 };
+const blankFile = () => {
+	return new Promise((resolve, reject) =>
+		fs.mkdtemp(path.join(os.tmpdir(), 'vscode'), (err, folder) => {
+			if (err) return reject(err.message);
+			let fName = path.join(folder, 'null');
+			fs.writeFile(fName, "", err => {
+				if (err) return reject(err.message);
+				resolve(fName);
+			});
+		}));
+};
 
 function dump(fr) {
 	return function(n) {
 		console.log(fr, "::", n);
 		return n;
-	}
+	};
 }
 
 exports.diffState = (reviewBranch, targetBranch, cb) => {
@@ -126,21 +142,24 @@ exports.diffState = (reviewBranch, targetBranch, cb) => {
 							.then(() => {
 								// we now have the required file list
 								for (let file in files) {
+									console.log(files[file][0], file);
 									switch (files[file][0]) {
 										case 'U': // conflict
-											cb(file, null, true);
+											cb(file, null, exports.CONFILCT);
 											break;
 										case 'M': // modified
 											tmpFile(targetBranch, file)
-												.then(tmp => cb(file, tmp));
+												.then(tmp => cb(file, tmp, exports.MODIFIED));
 											break;
 										case 'A': // added
 										case 'C': // copied
-											cb(file, null);
+											blankFile()
+												.then(tmp => cb(file, tmp, exports.NEW));
 											break;
 										case 'D': // deleted
 											tmpFile(targetBranch, file)
-												.then(tmp => cb(file, tmp));
+												.then(tmp => blankFile()
+													.then(blnk => cb(blnk, tmp, exports.DELETED, file)));
 											break;
 										case 'R': // renamed (deleted+added)
 											// there must be more info here.

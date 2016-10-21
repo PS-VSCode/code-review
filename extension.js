@@ -2,6 +2,7 @@
 
 const vscode = require('vscode');
 const git = require('./git');
+const path = require('path');
 
 const QuickPickDiffItem = function(diffItem) {
 	this.name = diffItem.name;
@@ -68,25 +69,39 @@ const reviewAgainstCurrentBranch = () => {
 		);
 };
 
-const handleDiffs = (baseFileName, patchTempFileName, conflictFlag) => {
-	if (!baseFileName || !patchTempFileName) return;
+function handleDiffs(targetBranch, baseFileName, patchTempFileName, stateFlag, deletedFileName) {
+	//if (!baseFileName || !patchTempFileName) return;
 
-	let baseFilePath = vscode.Uri.file(vscode.workspace.rootPath + '/' + baseFileName);
+	let baseFilePath = vscode.Uri.file(path.join(vscode.workspace.rootPath, baseFileName));
 	let patchTempFilePath = vscode.Uri.file(patchTempFileName);
-
-	if (conflictFlag) {
+	if (stateFlag === git.CONFLICT) {
+		console.log(targetBranch, baseFileName, patchTempFileName, stateFlag, deletedFileName);
 		console.log('conflict set');
-		return;
+	} else if (stateFlag === git.NEW) {
+		console.log("New?", stateFlag)
+		vscode.commands.executeCommand('vscode.diff', patchTempFilePath, baseFilePath, `(${targetBranch})[NEW]⟷${baseFileName}`)
+			.then((xyz) => {
+				console.log(xyz);
+				vscode.commands.executeCommand('workbench.action.keepEditor', vscode.window.activeTextEditor)
+			});
+	} else if (stateFlag === git.DELETED) {
+		console.log("Deleted?", stateFlag)
+
 	} else {
-		vscode.commands.executeCommand('vscode.diff', patchTempFilePath, baseFilePath);
+		console.log("Modified?", stateFlag)
+		vscode.commands.executeCommand('vscode.diff', patchTempFilePath, baseFilePath, `(${targetBranch})⟷${baseFileName}`)
+			.then((xyz) => {
+				console.log(xyz);
+				vscode.commands.executeCommand('workbench.action.keepEditor', vscode.window.activeTextEditor)
+			});;
 	}
-};
+}
 
 const reviewBranches = (baseBranch, patchBranch) => {
 	var baseBranchLookup = gitLookupForBranch(baseBranch);
 	var patchBranchLookup = gitLookupForBranch(patchBranch);
 
-	git.diffState(baseBranchLookup, patchBranchLookup, handleDiffs);
+	git.diffState(baseBranchLookup, patchBranchLookup, handleDiffs.bind(0, baseBranchLookup));
 };
 
 function activate(context) {
