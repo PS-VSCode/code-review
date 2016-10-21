@@ -64,7 +64,7 @@ const tmpFile = (branch, file) => {
 				fs.mkdtemp(path.join(os.tmpdir(), 'vscode'), (err, folder) => {
 					if (err) return reject(err.message);
 					let fName = path.join(folder, file.replace(/[\\\/]/g, '!'));
-					fs.writeFile(fName, err => {
+					fs.writeFile(fName, fileContent, err => {
 						if (err) return reject(err.message);
 						resolve(fName);
 					});
