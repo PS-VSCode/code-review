@@ -60,23 +60,14 @@ const reviewAgainstCurrentBranch = () => {
 };
 
 const handleDiffs = (baseFileName, patchTempFileName, conflictFlag) => {
-	if (!baseFileName) baseFileName = '/dev/null';
-	if (!patchTempFileName) patchTempFileName = '/dev/null';
-	console.log(baseFileName);
-	console.log(patchTempFileName);
-
-	console.log('handling your shit');
+	if (!baseFileName || !patchTempFileName) return;
 
 	if (conflictFlag) {
 		console.log('conflict set');
 		return;
 	} else {
 		console.log('opening ' + baseFileName + ' against ' + patchTempFileName);
-
-		vscode.commands.executeCommand('vscode.diff', {
-			left: baseFileName,
-			right: patchTempFileName
-		})
+		vscode.commands.executeCommand('vscode.diff', vscode.Uri.file(vscode.workspace.rootPath + '/' + baseFileName), vscode.Uri.file(patchTempFileName));
 	}
 
 	//vscode.window.showInformationMessage('base: ' + baseFileName + ', patch: ' + patchTempFileName + ', conflicting?: ' + conflictFlag);

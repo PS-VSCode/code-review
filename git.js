@@ -5,7 +5,7 @@
 setGitPath("path/to/git")
 setGitRepoBase("basedir")
 branchList()
-diffState("targetBranch", "reviewBranch", cb(reviewBranchFileName, targetBranchTempFilename, conflictFlag))
+diffState("reviewBranch", "targetBranch", cb(reviewBranchFileName, targetBranchTempFilename, conflictFlag))
 */
 
 const cp = require('child_process');
@@ -52,6 +52,7 @@ const fileStatusList = () => gitRun(['status', '-s', '--porcelain'])
 			files[match[2].trim()] = match[1].trim();
 			match = matcher.exec(modifiedString);
 		}
+		console.log(files);
 		return files;
 	});
 
@@ -73,14 +74,15 @@ const tmpFile = (branch, file) => {
 
 function dump(fr) {
 	return function(n) {
-		// console.log(fr, "::", n);
+		console.log(fr, "::", n);
 		return n;
 	}
 }
 
-exports.diffState = (targetBranch, reviewBranch, cb) => {
+exports.diffState = (reviewBranch, targetBranch, cb) => {
 	reviewBranch = reviewBranch.trim();
 	targetBranch = targetBranch.trim();
+
 	return gitRun(['branch'])
 		.then(resultString => {
 			const matcher = /[\s\*]*(.+)/y;
