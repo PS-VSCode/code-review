@@ -50,7 +50,7 @@ const reviewAgainstCurrentBranch = () => {
 				chooseBranch()
 					.then(
 						selectedBranch => {
-							reviewBranches(selectedBranch, currentBranch);
+							reviewBranches(currentBranch, selectedBranch);
 						},
 						() => null
 					);
