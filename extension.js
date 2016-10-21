@@ -12,7 +12,16 @@ const QuickPickDiffItem = function(diffItem) {
 	this.description = diffItem.sha + ' (' + diffItem.msg + ')';
 };
 
-const gitLookupForBranch = branch => branch.hasOwnProperty('sha') ? branch.sha : branch;
+const gitLookupForBranch = branch => {
+	// Assuming we will either get back an internally defined branch/diff obj, or a simple branch name/sha
+	if (branch.hasOwnProperty('name')) {
+		return branch.name;
+	} else if (branch.hasOwnProperty('sha')) {
+		return branch.sha;
+	} else {
+		return branch;
+	}
+};
 exports.gitLookupForBranch = gitLookupForBranch;
 
 const chooseBranch = () => git.branchList()
