@@ -78,7 +78,7 @@ const handleDiffs = (baseFileName, patchTempFileName, conflictFlag) => {
 		console.log('conflict set');
 		return;
 	} else {
-		vscode.commands.executeCommand('vscode.diff', baseFilePath, patchTempFilePath);
+		vscode.commands.executeCommand('vscode.diff', patchTempFilePath, baseFilePath);
 	}
 };
 
