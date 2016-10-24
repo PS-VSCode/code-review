@@ -45,7 +45,8 @@ exports.setGitPath = newPath => gitPath = newPath;
 exports.setGitRepoBase = newBase => gitRepoBase = newBase;
 
 exports.currentBranch = () => {
-	return gitRun(['rev-parse', '--abbrev-ref', 'HEAD']);
+	return gitRun(['rev-parse', '--abbrev-ref', 'HEAD'])
+		.then(result => result.trim());
 };
 
 const fileStatusList = () => gitRun(['status', '-s', '--porcelain'])

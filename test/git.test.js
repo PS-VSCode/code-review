@@ -7,6 +7,8 @@ const expect = require('chai')
 
 require('./surroundHooks');
 
+git.setGitRepoBase(vscode.workspace.rootPath);
+
 describe('#currentBranch', function() {
 	context('when inside of a git repository', function() {
 		it('should return the name of the current git branch', function() {
