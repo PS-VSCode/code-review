@@ -58,7 +58,6 @@ const fileStatusList = () => gitRun(['status', '-s', '--porcelain'])
 			files[match[2].trim()] = match[1].trim();
 			match = matcher.exec(modifiedString);
 		}
-		console.log(files);
 		return files;
 	});
 
@@ -96,7 +95,8 @@ function dump(fr) {
 	};
 }
 
-exports.diffState = (reviewBranch, targetBranch, cb) => {
+
+exports.diffState = (reviewBranch, targetBranch) => {
 	reviewBranch = reviewBranch.trim();
 	targetBranch = targetBranch.trim();
 
@@ -141,26 +141,31 @@ exports.diffState = (reviewBranch, targetBranch, cb) => {
 							// drop the junk branch
 							.then(() => gitRun(['branch', '-D', outputbranch]))
 							.then(() => {
+								let rtnPromises = [];
+								let count = 0;
 								// we now have the required file list
 								for (let file in files) {
-									console.log(files[file][0], file);
+									count++;
+									console.log("file:", file);
 									switch (files[file][0]) {
 										case 'U': // conflict
-											cb(file, null, exports.CONFILCT);
+											rtnPromises.push(Promise.resolve([file, null, exports.CONFILCT]));
 											break;
 										case 'M': // modified
-											tmpFile(targetBranch, file)
-												.then(tmp => cb(file, tmp, exports.MODIFIED));
+											rtnPromises.push(tmpFile(targetBranch, file)
+												.then(tmp => [file, tmp, exports.MODIFIED]));
 											break;
 										case 'A': // added
 										case 'C': // copied
-											blankFile()
-												.then(tmp => cb(file, tmp, exports.NEW));
+											rtnPromises.push(
+												blankFile()
+												.then(tmp => [file, tmp, exports.NEW]));
 											break;
 										case 'D': // deleted
-											tmpFile(targetBranch, file)
+											rtnPromises.push(
+												tmpFile(targetBranch, file)
 												.then(tmp => blankFile()
-													.then(blnk => cb(blnk, tmp, exports.DELETED, file)));
+													.then(blnk => [blnk, tmp, exports.DELETED, file])));
 											break;
 										case 'R': // renamed (deleted+added)
 											// there must be more info here.
@@ -172,6 +177,7 @@ exports.diffState = (reviewBranch, targetBranch, cb) => {
 											break;
 									}
 								}
+								return Promise.all(rtnPromises);
 							}))));
 		});
 };
